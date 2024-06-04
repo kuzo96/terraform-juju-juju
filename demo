@@ -1,0 +1,30 @@
+terraform {
+  required_providers {
+    juju = {
+      version = "0.12.0"
+      source  = "juju/juju"
+    }
+  }
+}
+
+provider "juju" {}
+
+resource "juju_model" "demo" {
+  name = "demo"
+
+}
+resource "juju_machine" "this_machine" {
+  model       = juju_model.demo.name
+  base        = "ubuntu@22.04"
+  name        = "vmdemo"
+}
+resource "juju_application" "mysql" {
+  name = "mysql"
+
+  model = juju_model.demo.name
+
+  charm {
+    name = "mysql"
+    channel = "8.0/stable"
+  }
+}
